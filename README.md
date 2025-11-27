@@ -22,32 +22,32 @@ DocumentCreator/
 │       └── doc-evaluator.md       # 評価エージェント
 │
 └── docs/
-    ├── inputs/                    # 入力情報（要件、背景など）
-    ├── proposal/                  # 提案書関連
+    ├── 00_inputs/                 # 入力情報（要件、背景など）
+    ├── 01_proposal/               # 提案書関連
     │   ├── definitions/
     │   │   ├── template.md        # 提案書のテンプレート
     │   │   └── evaluation.md      # 提案書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
     │
-    ├── plan/                      # 計画書関連
+    ├── 02_plan/                   # 計画書関連
     │   ├── definitions/
     │   │   ├── template.md        # 計画書のテンプレート
     │   │   └── evaluation.md      # 計画書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
     │
-    ├── requirement/               # 要件定義書関連
+    ├── 03_requirement/            # 要件定義書関連
     │   ├── definitions/
     │   │   ├── template.md        # 要件定義書のテンプレート
     │   │   └── evaluation.md      # 要件定義書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
     │
-    ├── to-be_workflow/            # To-Beワークフロー関連
+    ├── 04_to-be_workflow/         # To-Beワークフロー関連
     │   ├── definitions/
     │   │   ├── template.md        # To-Beワークフローのテンプレート
     │   │   └── evaluation.md      # To-Beワークフローの評価基準
     │   └── output/                # 生成されたドラフト・最終版
     │
-    └── spec/                      # 仕様書関連
+    └── 05_spec/                   # 仕様書関連
         ├── definitions/
         │   ├── template.md        # 仕様書のテンプレート
         │   └── evaluation.md      # 仕様書の評価基準
@@ -74,7 +74,7 @@ DocumentCreator/
 ### 基本的な使用方法
 
 1. **入力情報の準備**
-   - `docs/inputs/` ディレクトリに、要件や背景情報を記載したMarkdownファイルを配置
+   - `docs/00_inputs/` ディレクトリに、要件や背景情報を記載したMarkdownファイルを配置
 
 2. **ドキュメント種別の指定**
 
