@@ -9,7 +9,7 @@ DocumentCreatorは、以下の機能を提供します：
 - **複数スタイルでのドラフト生成**: 構造化、ナラティブ、簡潔、論理的、インパクト重視など、異なるスタイルで複数のドラフトを生成
 - **自動評価**: 生成されたドラフトを定義された評価基準に基づいて自動評価
 - **反復改善**: 評価結果に基づき、合格基準を満たすまで改善を繰り返し
-- **柔軟なドキュメントタイプ**: 仕様書、提案書など、複数のドキュメントタイプに対応
+- **柔軟なドキュメントタイプ**: 提案書、計画書、要件定義書、To-Beワークフロー、仕様書など、複数のドキュメントタイプに対応
 
 ## プロジェクト構造
 
@@ -23,16 +23,34 @@ DocumentCreator/
 │
 └── docs/
     ├── inputs/                    # 入力情報（要件、背景など）
-    ├── spec/                      # 仕様書関連
+    ├── proposal/                  # 提案書関連
     │   ├── definitions/
-    │   │   ├── template.md        # 仕様書のテンプレート
-    │   │   └── evaluation.md      # 仕様書の評価基準
+    │   │   ├── template.md        # 提案書のテンプレート
+    │   │   └── evaluation.md      # 提案書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
     │
-    └── proposal/                  # 提案書関連
+    ├── plan/                      # 計画書関連
+    │   ├── definitions/
+    │   │   ├── template.md        # 計画書のテンプレート
+    │   │   └── evaluation.md      # 計画書の評価基準
+    │   └── output/                # 生成されたドラフト・最終版
+    │
+    ├── requirement/               # 要件定義書関連
+    │   ├── definitions/
+    │   │   ├── template.md        # 要件定義書のテンプレート
+    │   │   └── evaluation.md      # 要件定義書の評価基準
+    │   └── output/                # 生成されたドラフト・最終版
+    │
+    ├── to-be_workflow/            # To-Beワークフロー関連
+    │   ├── definitions/
+    │   │   ├── template.md        # To-Beワークフローのテンプレート
+    │   │   └── evaluation.md      # To-Beワークフローの評価基準
+    │   └── output/                # 生成されたドラフト・最終版
+    │
+    └── spec/                      # 仕様書関連
         ├── definitions/
-        │   ├── template.md        # 提案書のテンプレート
-        │   └── evaluation.md      # 提案書の評価基準
+        │   ├── template.md        # 仕様書のテンプレート
+        │   └── evaluation.md      # 仕様書の評価基準
         └── output/                # 生成されたドラフト・最終版
 ```
 
@@ -88,8 +106,11 @@ DocumentCreator/
 
 | doc_type | 説明 | 使用例 |
 |----------|------|--------|
-| `spec` | 機能仕様書 / 要件定義書 | `doc_type=spec で作成して` |
 | `proposal` | 提案書 / PoC計画書 | `proposal で作成して` |
+| `plan` | 計画書 | `plan で作成して` |
+| `requirement` | 要件定義書 | `requirement で作成して` |
+| `to-be_workflow` | To-Beワークフロー | `to-be_workflow で作成して` |
+| `spec` | 機能仕様書 | `doc_type=spec で作成して` |
 
 ### 生成されるファイル
 
