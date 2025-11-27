@@ -81,21 +81,24 @@ Claude Code の `@save` 機能を用いて保存します。
 |------------|------|--------------|
 | `spec` | 機能仕様書 / 要件定義書 | `/create_document spec ...` |
 | `proposal` | 提案書 / PoC計画書 | `/create_document proposal ...` |
+| `plan` | 計画書 | `/create_document plan ...` |
+| `requirement` | 要件定義書 | `/create_document requirement ...` |
+| `to-be_workflow` | To-Beワークフロー / 業務フロー | `/create_document to-be_workflow ...` |
 
 ### レジストリ詳細
 
 * ID: `spec`
 
-  * 説明: 機能仕様書 / 要件定義書
+  * 説明: 機能仕様書 / システム仕様書
   * ユーザーの言い回し例（自動判定時）:
 
     * 「機能仕様書を書いて」
-    * 「要件定義をまとめたい」
     * 「システム仕様を作成して」
+    * 「詳細仕様をまとめたい」
   * テンプレートと評価指標:
 
-    * `@docs/spec/definitions/template.md`
-    * `@docs/spec/definitions/evaluation.md`
+    * `@docs/05_spec/definitions/template.md`
+    * `@docs/05_spec/definitions/evaluation.md`
 
 * ID: `proposal`
 
@@ -107,8 +110,47 @@ Claude Code の `@save` 機能を用いて保存します。
     * 「導入提案を作成して」
   * テンプレートと評価指標:
 
-    * `@docs/proposal/definitions/template.md`
-    * `@docs/proposal/definitions/evaluation.md`
+    * `@docs/01_proposal/definitions/template.md`
+    * `@docs/01_proposal/definitions/evaluation.md`
+
+* ID: `plan`
+
+  * 説明: 計画書（実行計画、プロジェクト計画など）
+  * ユーザーの言い回し例（自動判定時）:
+
+    * 「計画書を作成して」
+    * 「実行計画を作りたい」
+    * 「プロジェクト計画を書いて」
+  * テンプレートと評価指標:
+
+    * `@docs/02_plan/definitions/template.md`
+    * `@docs/02_plan/definitions/evaluation.md`
+
+* ID: `requirement`
+
+  * 説明: 要件定義書（ビジネス要件、システム要件など）
+  * ユーザーの言い回し例（自動判定時）:
+
+    * 「要件定義書を作成して」
+    * 「要件書を書いて」
+    * 「ビジネス要件をまとめたい」
+  * テンプレートと評価指標:
+
+    * `@docs/03_requirement/definitions/template.md`
+    * `@docs/03_requirement/definitions/evaluation.md`
+
+* ID: `to-be_workflow`
+
+  * 説明: To-Beワークフロー / 業務フロー（改善後の業務プロセス定義）
+  * ユーザーの言い回し例（自動判定時）:
+
+    * 「To-Beワークフローを作成して」
+    * 「業務フローを定義して」
+    * 「改善後のプロセスをまとめたい」
+  * テンプレートと評価指標:
+
+    * `@docs/04_to-be_workflow/definitions/template.md`
+    * `@docs/04_to-be_workflow/definitions/evaluation.md`
 
 ### インプットファイルについて
 
@@ -272,7 +314,7 @@ Claude Code の `@save` 機能を用いて保存します。
 
 ユーザーから特別な希望がない場合、doc_type ごとに以下の組み合わせをデフォルトとします。
 
-* doc_type = `spec`（機能仕様書 / 要件定義書）
+* doc_type = `spec`（機能仕様書 / システム仕様書）
 
   * 使用するドラフター:
 
@@ -288,7 +330,31 @@ Claude Code の `@save` 機能を用いて保存します。
     * `doc-drafter-narrative`
     * `doc-drafter-impact`
 
-* その他の doc_type（未定義 / 将来追加）：
+* doc_type = `plan`（計画書）
+
+  * 使用するドラフター:
+
+    * `doc-drafter-structured`
+    * `doc-drafter-logical`
+    * （余裕があれば）`doc-drafter-concise`
+
+* doc_type = `requirement`（要件定義書）
+
+  * 使用するドラフター:
+
+    * `doc-drafter-structured`
+    * `doc-drafter-logical`
+    * （余裕があれば）`doc-drafter-concise`
+
+* doc_type = `to-be_workflow`（To-Beワークフロー / 業務フロー）
+
+  * 使用するドラフター:
+
+    * `doc-drafter-structured`
+    * `doc-drafter-narrative`
+    * （余裕があれば）`doc-drafter-logical`
+
+* その他の doc_type（将来追加）：
 
   * 一旦は汎用的な組み合わせを使用：
 
