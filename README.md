@@ -28,30 +28,40 @@ DocumentCreator/
     │   │   ├── template.md        # 提案書のテンプレート
     │   │   └── evaluation.md      # 提案書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
+    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 02_plan/                   # 計画書関連
     │   ├── definitions/
     │   │   ├── template.md        # 計画書のテンプレート
     │   │   └── evaluation.md      # 計画書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
+    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 03_requirement/            # 要件定義書関連
     │   ├── definitions/
     │   │   ├── template.md        # 要件定義書のテンプレート
     │   │   └── evaluation.md      # 要件定義書の評価基準
     │   └── output/                # 生成されたドラフト・最終版
+    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 04_to-be_workflow/         # To-Beワークフロー関連
     │   ├── definitions/
     │   │   ├── template.md        # To-Beワークフローのテンプレート
     │   │   └── evaluation.md      # To-Beワークフローの評価基準
     │   └── output/                # 生成されたドラフト・最終版
+    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     └── 05_spec/                   # 仕様書関連
         ├── definitions/
         │   ├── template.md        # 仕様書のテンプレート
         │   └── evaluation.md      # 仕様書の評価基準
         └── output/                # 生成されたドラフト・最終版
+            ├── draft/             # ドラフトファイル格納ディレクトリ
+            └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
 ```
 
 ## エージェント構成
@@ -76,23 +86,26 @@ DocumentCreator/
 1. **入力情報の準備**
    - `docs/00_inputs/` ディレクトリに、要件や背景情報を記載したMarkdownファイルを配置
 
-2. **ドキュメント種別の指定**
+2. **ドキュメント生成の実行**
 
-   以下の2つの方法でドキュメント種別を指定できます：
+   以下の2つの方法で実行できます：
 
-   - **明示的に指定**（推奨）
+   - **ドキュメント種別を明示的に指定する場合**（推奨）
+     必ず `/create_document` コマンドを使用してください。
      ```
-     doc_type=spec で機能仕様書を作成してください
+     /create_document spec 機能仕様書を作成してください
      ```
-     ```
-     proposal で提案書を作成してください
-     ```
+     ※ 先頭にドキュメント種別（`spec`, `proposal` 等）を指定すると、自動判定を行わずにその種別で確定します。
 
-   - **自動判定**
+   - **ドキュメント種別を自動判定させる場合**
+     チャットで直接指示を出すか、コマンドの種別指定を省略します。
      ```
      機能仕様書を作成してください
      ```
-     → システムが自動的に `spec` と判定します
+     ```
+     /create_document 新規サービスの提案資料を作りたいです
+     ```
+     → システムが文脈から最適なドキュメント種別を自動判定します。
 
 3. **スタイルの指定**（オプション）
 
@@ -104,20 +117,20 @@ DocumentCreator/
 
 ### 利用可能なドキュメントタイプ
 
-| doc_type | 説明 | 使用例 |
+| doc_type | 説明 | コマンド指定例 |
 |----------|------|--------|
-| `proposal` | 提案書 / PoC計画書 | `proposal で作成して` |
-| `plan` | 計画書 | `plan で作成して` |
-| `requirement` | 要件定義書 | `requirement で作成して` |
-| `to-be_workflow` | To-Beワークフロー | `to-be_workflow で作成して` |
-| `spec` | 機能仕様書 | `doc_type=spec で作成して` |
+| `proposal` | 提案書 / PoC計画書 | `/create_document proposal ...` |
+| `plan` | 計画書 | `/create_document plan ...` |
+| `requirement` | 要件定義書 | `/create_document requirement ...` |
+| `to-be_workflow` | To-Beワークフロー | `/create_document to-be_workflow ...` |
+| `spec` | 機能仕様書 | `/create_document spec ...` |
 
 ### 生成されるファイル
 
 ドキュメント生成後、以下のファイルが `docs/<doc_type>/output/` に保存されます：
 
-- `draft-1.md`, `draft-2.md`, ... : 各スタイルで生成されたドラフト
-- `final.md` : 最終的に採用されたドキュメント
+- `draft/draft-1.md`, `draft/draft-2.md`, ... : 各スタイルで生成されたドラフト（draftサブディレクトリ内）
+- `<テンプレート名>_<YYYYMMDD>.md` : 最終的に採用されたドキュメント（例: 機能仕様書_20251127.md）
 
 ## ワークフロー
 
@@ -129,7 +142,7 @@ DocumentCreator/
 6. **判定**:
    - 合格案がある場合 → 最適な案を最終版として保存
    - すべて不合格の場合 → フィードバックをもとに再生成（最大2〜3回）
-7. **最終出力**: 最終版を `docs/<doc_type>/output/final.md` に保存
+7. **最終出力**: 最終版を `docs/<doc_type>/output/<テンプレート名>_<YYYYMMDD>.md` に保存
 
 ## デフォルトのドラフター組み合わせ
 

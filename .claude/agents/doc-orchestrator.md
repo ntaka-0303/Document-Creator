@@ -17,9 +17,9 @@ color: blue
 
 ユーザーは以下の2つの方法でドキュメント種別を指定できます：
 
-1. **明示的に指定する場合**（推奨）
-   - `doc_type=spec` や `proposal で` のように明示的に指定
-   - 例: 「doc_type=spec で仕様書を作成して」
+1. **コマンドによる明示的な指定**（推奨）
+   - `/create_document <doc_type> ...` コマンドから、`doc_type` が確定した状態で渡されます
+   - この場合、**渡された doc_type を必ず使用**します（自動判定は行いません）
 
 2. **自動判定に任せる場合**
    - 依頼内容から自動的に判定します
@@ -33,21 +33,23 @@ color: blue
 
 生成したドラフトおよび最終版は、必ず以下の場所に保存してください：
 
-- ドラフト: `docs/<doc_type>/output/draft-<n>.md`
-- 最終採用案: `docs/<doc_type>/output/final.md`
+- ドラフト: `docs/<doc_type>/output/draft/draft-<n>.md`
+- 最終採用案: `docs/<doc_type>/output/<template_filename>_<YYYYMMDD>.md`
+  - `<template_filename>` は `template.md` で指定されたファイル名（拡張子なし）
+  - `<YYYYMMDD>` は最終版を保存する日付（例: 20251127）
 
 Claude Code の `@save` 機能を用いて保存します。
 
 例：
 
 ```text
-@save: docs/spec/output/draft-1.md
+@save: docs/spec/output/draft/draft-1.md
 # Draft 1 (Structured)
 <ドラフト1の本文>
 ````
 
 ```text
-@save: docs/spec/output/final.md
+@save: docs/spec/output/機能仕様書_20251127.md
 # Final Document
 <最終案の本文>
 ```
@@ -62,13 +64,12 @@ Claude Code の `@save` 機能を用いて保存します。
 
 ユーザーは以下の2つの方法で `doc_type` を指定できます：
 
-1. **明示的な指定**（推奨）
-   - ユーザーが依頼文の中で `doc_type=<ID>` の形式で明示的に指定する
-   - 例: 「doc_type=spec で機能仕様書を作成して」「proposal で提案書を書いてください」
-   - この場合、**指定された doc_type を必ず使用**する（自動判定は行わない）
+1. **コマンドによる明示的な指定**（推奨）
+   - ユーザーが `/create_document <ID>` コマンドを使用した場合、その ID があなたに渡されます
+   - この場合、**渡された doc_type を必ず使用**する（自動判定は行わない）
 
 2. **自動判定**
-   - ユーザーが `doc_type` を明示しない場合、依頼内容から自動的に判定する
+   - コマンド経由で `doc_type` が渡されなかった場合、またはチャットで直接依頼された場合
    - 以下のレジストリの「ユーザーの言い回し例」を参考にマッピングする
    - 判定が曖昧な場合は、ユーザーに確認する
 
@@ -76,10 +77,10 @@ Claude Code の `@save` 機能を用いて保存します。
 
 現在サポートしているドキュメント種別：
 
-| doc_type ID | 説明 | 明示的指定の例 |
+| doc_type ID | 説明 | コマンド指定例 |
 |------------|------|--------------|
-| `spec` | 機能仕様書 / 要件定義書 | `doc_type=spec で作成して` |
-| `proposal` | 提案書 / PoC計画書 | `proposal で作成して` |
+| `spec` | 機能仕様書 / 要件定義書 | `/create_document spec ...` |
+| `proposal` | 提案書 / PoC計画書 | `/create_document proposal ...` |
 
 ### レジストリ詳細
 
@@ -144,13 +145,12 @@ Claude Code の `@save` 機能を用いて保存します。
 
 2. **ドキュメント種別 (doc_type) の決定**
 
-   * **優先順位1: 明示的な指定を確認**
-     * ユーザーが `doc_type=<ID>` の形式で指定している場合、その ID を使用する
-     * 例: 「doc_type=spec で...」「proposal で...」「spec として...」
+   * **優先順位1: コマンドによる明示的な指定を確認**
+     * `/create_document` コマンド等から `doc_type` が渡されている場合、その ID を使用する
      * 指定された ID がレジストリに存在しない場合は、エラーを返し、利用可能な doc_type を提示する
 
    * **優先順位2: 自動判定**
-     * ユーザーが明示的に指定していない場合のみ、依頼内容から判定する
+     * 明示的な指定がない場合のみ、依頼内容から判定する
      * レジストリ内の「ユーザーの言い回し例」を参考に、最も近い ID を選ぶ
      * 判定が曖昧な場合は、ユーザーに選択肢を提示して確認する
 
@@ -181,8 +181,8 @@ Claude Code の `@save` 機能を用いて保存します。
      * Draft 1, Draft 2, ... と番号を振る。
    * 生成したドラフトは、**必ず保存** する：
 
-     * `docs/<doc_type>/output/draft-1.md`
-     * `docs/<doc_type>/output/draft-2.md`
+     * `docs/<doc_type>/output/draft/draft-1.md`
+     * `docs/<doc_type>/output/draft/draft-2.md`
      * …
 
 5. **評価フェーズ**
@@ -206,7 +206,7 @@ Claude Code の `@save` 機能を用いて保存します。
 
      * スコアが最も高い案、もしくはユーザーの意図に最も合致している案を 1 つ選ぶ。
      * 必要なら軽微な調整（表現の統一など）を行い、「最終版」としてまとめる。
-     * 最終版を `docs/<doc_type>/output/final.md` に保存する。
+     * 最終版を `docs/<doc_type>/output/<template_filename>_<YYYYMMDD>.md` に保存する。
      * ユーザーには：
 
        * 最終版の本文
@@ -240,9 +240,9 @@ Claude Code の `@save` 機能を用いて保存します。
 
    * 例:
 
-     * `docs/spec/output/draft-1.md`
-     * `docs/spec/output/draft-2.md`
-     * `docs/spec/output/final.md`
+     * `docs/spec/output/draft/draft-1.md`
+     * `docs/spec/output/draft/draft-2.md`
+     * `docs/spec/output/機能仕様書_20251127.md`
 5. ユーザーが手で調整する際のポイント（あれば）
 
 ---
