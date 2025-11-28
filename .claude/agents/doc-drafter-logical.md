@@ -11,6 +11,7 @@ color: purple
 
 - ドキュメントの目的・想定読者
 - `docs/inputs/` 配下のすべてのファイルの内容
+- `docs/<doc_type>/output/` 配下の最終版ファイル（`draft/` 配下を除く）
 - `template.md` の章立て
 - （2回目以降）評価・フィードバック
 
