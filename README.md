@@ -16,10 +16,11 @@ DocumentCreatorは、以下の機能を提供します：
 ```
 DocumentCreator/
 ├── .claude/
-│   └── agents/                    # Claude Agentの定義
-│       ├── doc-orchestrator.md    # オーケストレーションエージェント
-│       ├── doc-drafter-*.md       # 各種ドラフターエージェント
-│       └── doc-evaluator.md       # 評価エージェント
+│   ├── agents/                    # Claude Agentの定義
+│   │   ├── doc-drafter-*.md       # 各種ドラフターエージェント
+│   │   └── doc-evaluator.md       # 評価エージェント
+│   └── commands/
+│       └── create_document.md     # ドキュメント作成コマンド（オーケストレーション機能含む）
 │
 └── docs/
     ├── 00_inputs/                 # 入力情報（要件、背景など）
@@ -66,8 +67,8 @@ DocumentCreator/
 
 ## エージェント構成
 
-### オーケストレーター
-- **doc-orchestrator**: ドキュメント生成プロセス全体を管理
+### コマンド
+- **/create_document**: ドキュメント生成プロセス全体を管理（オーケストレーション機能を含む）
 
 ### ドラフター（5種類のスタイル）
 - **doc-drafter-structured**: 構造化・網羅性重視
@@ -119,7 +120,7 @@ DocumentCreator/
 
 | doc_type | 説明 | コマンド指定例 |
 |----------|------|--------|
-| `proposal` | 提案書 / PoC計画書 | `/create_document proposal ...` |
+| `proposal` | 提案書 | `/create_document proposal ...` |
 | `plan` | 計画書 | `/create_document plan ...` |
 | `requirement` | 要件定義書 | `/create_document requirement ...` |
 | `to-be_workflow` | To-Beワークフロー | `/create_document to-be_workflow ...` |
@@ -134,10 +135,12 @@ DocumentCreator/
 
 ## ワークフロー
 
+`/create_document` コマンドが以下のプロセスを自動的に実行します：
+
 1. **依頼受付**: ユーザーからの依頼内容を把握
 2. **doc_type決定**: 明示的指定または自動判定
 3. **ドラフター選択**: ドキュメントタイプと要件に応じて適切なドラフターを選択（通常2〜3個）
-4. **ドラフト生成**: 各ドラフターが独立してドラフトを生成
+4. **ドラフト生成**: 各ドラフターを呼び出して、独立してドラフトを生成（並列実行）
 5. **評価**: 評価エージェントが各ドラフトをスコアリング
 6. **判定**:
    - 合格案がある場合 → 最適な案を最終版として保存
