@@ -10,30 +10,9 @@ description: "DocumentCreator: ドキュメント作成プロセス全体を制�
 
 ---
 
-## 0. 入力引数の解析
+## 0. 入力引数の扱い
 
-ユーザーからのコマンド入力 `$ARGUMENTS` を解析し、**ドキュメント種別 (`target_doc_type`)** と **依頼内容 (`request_content`)** を確定させてください。
-
-### 解析手順
-
-1. `$ARGUMENTS` の先頭トークンを確認する。
-2. 先頭トークンが以下のいずれかに **完全一致** する場合:
-   - `spec`
-   - `proposal`
-   - `plan`
-   - `requirement`
-   - `to-be_workflow`
-
-   → **種別指定あり** とみなす。
-     - `target_doc_type` = その先頭トークン
-     - `request_content` = 先頭トークンを取り除いた残りの文字列
-
-3. 先頭トークンが上記に一致しない場合:
-   → **種別指定なし（自動判定対象）** とみなす。
-     - `target_doc_type` = `null` (未指定)
-     - `request_content` = `$ARGUMENTS` 全体
-
-### 解析対象の入力引数
+コマンド実行時の引数 `$ARGUMENTS` は、**依頼内容 (`request_content`)** として使用します。
 
 `$ARGUMENTS`
 
@@ -41,152 +20,90 @@ description: "DocumentCreator: ドキュメント作成プロセス全体を制�
 
 ## 1. サポートするドキュメント種別（Input Set）
 
-以下は、ドキュメント種別のレジストリです。
+**詳細は以下のレジストリファイルを参照：**
+
+@.claude/registry/document_types.md
 
 ### doc_type の指定方法
 
-ユーザーは以下の2つの方法で `doc_type` を指定できます：
+`doc_type` は、**コマンド実行後に対話的に確認**します：
 
-1. **コマンドによる明示的な指定**（推奨）
-   - ユーザーが `/create_document <ID>` コマンドを使用した場合、その ID を `target_doc_type` として使用します
-   - この場合、**渡された doc_type を必ず使用**する（自動判定は行わない）
+1. **対話的選択**（必須）
+   - コマンド実行後、ユーザーに利用可能なドキュメント種別を番号付きリストで提示します
+   - ユーザーは番号で選択します
+   - この方式により、ユーザーは毎回正確なドキュメント種別を指定できます
 
-2. **自動判定**
-   - コマンド経由で `doc_type` が渡されなかった場合、またはチャットで直接依頼された場合
-   - 以下のレジストリの「ユーザーの言い回し例」を参考にマッピングする
-   - 判定が曖昧な場合は、ユーザーに確認する
+### クイックリファレンス
 
-### 利用可能な doc_type 一覧
+現在サポートしているドキュメント種別（詳細はレジストリ参照）：
 
-現在サポートしているドキュメント種別：
+| 番号 | doc_type ID | 説明 |
+|-----|------------|------|
+| 1 | `proposal` | 提案書 |
+| 2 | `plan` | 計画書 |
+| 3 | `requirement` | 要件定義書 |
+| 4 | `to-be_workflow` | To-Beワークフロー / 業務フロー |
+| 5 | `spec` | 機能仕様書 / システム仕様書 |
 
-| doc_type ID | 説明 | コマンド指定例 |
-|------------|------|--------------|
-| `spec` | 機能仕様書 / 要件定義書 | `/create_document spec ...` |
-| `proposal` | 提案書 / PoC計画書 | `/create_document proposal ...` |
-| `plan` | 計画書 | `/create_document plan ...` |
-| `requirement` | 要件定義書 | `/create_document requirement ...` |
-| `to-be_workflow` | To-Beワークフロー / 業務フロー | `/create_document to-be_workflow ...` |
-
-### レジストリ詳細
-
-* ID: `spec`
-
-  * 説明: 機能仕様書 / システム仕様書
-  * ユーザーの言い回し例（自動判定時）:
-
-    * 「機能仕様書を書いて」
-    * 「システム仕様を作成して」
-    * 「詳細仕様をまとめたい」
-  * テンプレートと評価指標:
-
-    * `@docs/05_spec/definitions/template.md`
-    * `@docs/05_spec/definitions/evaluation.md`
-
-* ID: `proposal`
-
-  * 説明: 提案書 / PoC 計画書などの提案系ドキュメント
-  * ユーザーの言い回し例（自動判定時）:
-
-    * 「提案書を作りたい」
-    * 「PoC計画書を作りたい」
-    * 「導入提案を作成して」
-  * テンプレートと評価指標:
-
-    * `@docs/01_proposal/definitions/template.md`
-    * `@docs/01_proposal/definitions/evaluation.md`
-
-* ID: `plan`
-
-  * 説明: 計画書（実行計画、プロジェクト計画など）
-  * ユーザーの言い回し例（自動判定時）:
-
-    * 「計画書を作成して」
-    * 「実行計画を作りたい」
-    * 「プロジェクト計画を書いて」
-  * テンプレートと評価指標:
-
-    * `@docs/02_plan/definitions/template.md`
-    * `@docs/02_plan/definitions/evaluation.md`
-
-* ID: `requirement`
-
-  * 説明: 要件定義書（ビジネス要件、システム要件など）
-  * ユーザーの言い回し例（自動判定時）:
-
-    * 「要件定義書を作成して」
-    * 「要件書を書いて」
-    * 「ビジネス要件をまとめたい」
-  * テンプレートと評価指標:
-
-    * `@docs/03_requirement/definitions/template.md`
-    * `@docs/03_requirement/definitions/evaluation.md`
-
-* ID: `to-be_workflow`
-
-  * 説明: To-Beワークフロー / 業務フロー（改善後の業務プロセス定義）
-  * ユーザーの言い回し例（自動判定時）:
-
-    * 「To-Beワークフローを作成して」
-    * 「業務フローを定義して」
-    * 「改善後のプロセスをまとめたい」
-  * テンプレートと評価指標:
-
-    * `@docs/04_to-be_workflow/definitions/template.md`
-    * `@docs/04_to-be_workflow/definitions/evaluation.md`
-
-### インプットファイルについて
-
-**すべてのドキュメント種別で共通のインプットを使用します：**
-
-* 基本インプットディレクトリ: `docs/inputs/`
-* 各ドキュメント種別のoutputファイル: `docs/<doc_type>/output/*.md`（ただし`output/draft/`配下は除く）
-* インプットファイルは、ビジネス背景・要件・制約・前提条件などを含みます
-* outputファイルには、過去に生成された最終版ドキュメントが含まれ、これらを参考情報として活用できます
-
-※ 新しいドキュメント種別を追加するときは、このレジストリに ID / 説明 / テンプレートと評価指標のパスを追記する。
+※ 新しいドキュメント種別を追加するときは、レジストリファイルを更新してください。
 
 ---
 
-## 2. 利用可能な Draft Writer エージェント一覧
+## 2. 利用可能な Draft Writer エージェント
 
-以下のドラフトエージェントを組み合わせて使用できます。
+**詳細は以下のレジストリファイルを参照：**
 
-| エージェント名                  | 役割 / 特徴                        |
-| ------------------------ | ------------------------------ |
-| `doc-drafter-structured` | 構造化・網羅性・テンプレ忠実                 |
-| `doc-drafter-narrative`  | 読み物として理解しやすいストーリー重視            |
-| `doc-drafter-impact`     | 経営層向け、短くインパクトのあるメッセージ          |
-| `doc-drafter-concise`    | 最小限の情報に絞った事実ベースの簡潔版            |
-| `doc-drafter-logical`    | WHY/WHAT/HOW や因果関係を明確にしたロジカル構成 |
+@.claude/registry/drafter_agents.md
 
----
+### クイックリファレンス
 
+現在利用可能なドラフター（詳細はレジストリ参照）：
+
+- `doc-drafter-structured`: 構造化・網羅性重視
+- `doc-drafter-narrative`: ストーリー性・可読性重視
+- `doc-drafter-impact`: 経営層向け・短くインパクト
+- `doc-drafter-concise`: 簡潔・事実ベース
+- `doc-drafter-logical`: WHY/WHAT/HOW・論理構成
+
+※ 新しいドラフターを追加するときは、レジストリファイルを更新してください。
 ## 3. 対話フロー（全体）
 
 以下の手順でドキュメント作成プロセスを実行してください。
 
-### 1. ユーザーの依頼を把握する
+### 1. ドキュメント種別 (doc_type) の選択
 
-* どのようなドキュメントを、誰向けに、何の目的で作りたいかを理解する。
-* 不足している前提情報があれば、簡潔な質問で補う。
+コマンド実行後、まず以下の形式でユーザーにドキュメント種別を選択してもらいます：
 
-### 2. ドキュメント種別 (doc_type) の決定
+```
+作成するドキュメント種別を選択してください：
 
-* **優先順位1: コマンドによる明示的な指定を確認**
-  * `target_doc_type` が指定されている場合、その ID を使用する
-  * 指定された ID がレジストリに存在しない場合は、エラーを返し、利用可能な doc_type を提示する
+1. 提案書
+2. 計画書
+3. 要件定義書
+4. To-Beワークフロー / 業務フロー
+5. 機能仕様書 / システム仕様書
 
-* **優先順位2: 自動判定**
-  * `target_doc_type` が `null` の場合、依頼内容から判定する
-  * レジストリ内の「ユーザーの言い回し例」を参考に、最も近い ID を選ぶ
-  * 判定が曖昧な場合は、ユーザーに選択肢を提示して確認する
+番号を入力してください（1-5）:
+```
+
+* ユーザーが番号（1-5）で回答します
+* 回答に応じて対応する `doc_type` を決定します：
+  * 1 → `proposal`
+  * 2 → `plan`
+  * 3 → `requirement`
+  * 4 → `to-be_workflow`
+  * 5 → `spec`
 
 * **決定後の処理**
   * 対応する `template.md`, `evaluation.md` をコンテキストに含める
-  * **すべての** `docs/inputs/` 配下のファイルをインプットとしてコンテキストに含める
+  * **すべての** `docs/00_inputs/` 配下のファイルをインプットとしてコンテキストに含める
   * `docs/<doc_type>/output/` 配下の最終版ファイル（`draft/` 配下を除く）をインプットとしてコンテキストに含める
-  * 会話の中で「今回は doc_type = spec を使用します（明示的に指定 / 自動判定）」のように明示する
+  * 会話の中で「選択されたドキュメント種別: <種別名>（doc_type = <ID>）」のように明示する
+
+### 2. ユーザーの依頼を把握する
+
+* どのようなドキュメントを、誰向けに、何の目的で作りたいかを理解する。
+* 不足している前提情報があれば、簡潔な質問で補う。
 
 ### 3. Draft Writer の選択
 
@@ -194,7 +111,7 @@ description: "DocumentCreator: ドキュメント作成プロセス全体を制�
 
 * doc_type
 * 想定読者
-* ユーザーの希望（例: 「インパクト重視」「短め」「ストーリーで」）
+* ユーザーの希望（引数 `$ARGUMENTS` から判断、例: 「インパクト重視」「短め」「ストーリーで」）
 
 ### 4. ドラフト生成フェーズ
 
@@ -205,7 +122,7 @@ description: "DocumentCreator: ドキュメント作成プロセス全体を制�
 各ドラフターには以下を渡す：
 
 * ユーザー依頼の要約
-* `@docs/inputs/` 配下のすべてのファイル（@ 記法で参照）
+* `@docs/00_inputs/` 配下のすべてのファイル（@ 記法で参照）
 * `docs/<doc_type>/output/` 配下の最終版ファイル（`draft/` 配下を除く）
 * `@docs/<doc_type>/definitions/template.md`（選択した doc_type に対応するもの）
 * （2回目以降）前回ドラフトに対する評価・フィードバック
@@ -296,77 +213,30 @@ Draft 1, Draft 2, ... と番号を振り、1 ファイル 1 ドラフトとし�
 
 ## 5. Draft Writer 選択ロジック
 
+**詳細は以下のレジストリファイルを参照：**
+
+@.claude/registry/drafter_agents.md
+
 ### 5.1 ユーザーの明示的な希望がある場合
 
-ユーザーの発言に以下のようなキーワードが含まれている場合、その希望を**最優先**でドラフター選択に反映します。
+レジストリファイルの「キーワードベースの選択ロジック」セクションを参照してください。
 
-* 「ストーリーで」「読み物として」「ナラティブ」
+ユーザーの発言にキーワードが含まれている場合、対応するドラフターを**最優先**で含めます。
 
-  * `doc-drafter-narrative` を必ず含める。
-* 「経営層向け」「役員向け」「インパクト」「サマリだけ」「エグゼクティブ」
-
-  * `doc-drafter-impact` を必ず含める。
-* 「簡潔に」「短く」「箇条書き中心」「最低限だけでいい」
-
-  * `doc-drafter-concise` を必ず含める。
-* 「ロジック」「Why/What/How」「論理構成を重視」
-
-  * `doc-drafter-logical` を必ず含める。
-
-このときも、**構造の安定性を担保するために** 可能であれば `doc-drafter-structured` を 1 つは同時に走らせることを推奨します。
+このときも、**構造の安定性を担保するために** 可能であれば `doc-drafter-structured` を同時に走らせることを推奨します。
 
 ### 5.2 ドキュメント種別ごとのデフォルト組み合わせ
 
-ユーザーから特別な希望がない場合、doc_type ごとに以下の組み合わせをデフォルトとします。
+ユーザーから特別な希望がない場合、レジストリファイルの「ドキュメント種別一覧」テーブルの「デフォルトドラフター」列を参照してください。
 
-* doc_type = `spec`（機能仕様書 / システム仕様書）
+**クイックリファレンス**（詳細はレジストリ参照）：
 
-  * 使用するドラフター:
-
-    * `doc-drafter-structured`
-    * `doc-drafter-logical`
-    * （余裕があれば）`doc-drafter-concise`
-
-* doc_type = `proposal`（提案書 / PoC 計画書）
-
-  * 使用するドラフター:
-
-    * `doc-drafter-structured`
-    * `doc-drafter-narrative`
-    * `doc-drafter-impact`
-
-* doc_type = `plan`（計画書）
-
-  * 使用するドラフター:
-
-    * `doc-drafter-structured`
-    * `doc-drafter-logical`
-    * （余裕があれば）`doc-drafter-concise`
-
-* doc_type = `requirement`（要件定義書）
-
-  * 使用するドラフター:
-
-    * `doc-drafter-structured`
-    * `doc-drafter-logical`
-    * （余裕があれば）`doc-drafter-concise`
-
-* doc_type = `to-be_workflow`（To-Beワークフロー / 業務フロー）
-
-  * 使用するドラフター:
-
-    * `doc-drafter-structured`
-    * `doc-drafter-narrative`
-    * （余裕があれば）`doc-drafter-logical`
-
-* その他の doc_type（将来追加）：
-
-  * 一旦は汎用的な組み合わせを使用：
-
-    * `doc-drafter-structured`
-    * `doc-drafter-narrative`
-  * 依頼文の中に「経営層」「簡潔に」「ロジカルに」などのキーワードがあれば、そのスタイルのドラフターを追加する。
-
+- `spec`: structured, logical, (concise)
+- `proposal`: structured, narrative, impact
+- `plan`: structured, logical, (concise)
+- `requirement`: structured, logical, (concise)
+- `to-be_workflow`: structured, narrative, (logical)
+- その他（将来追加）: structured, narrative
 ### 5.3 ループ時の方針
 
 * 最初のループでは、**最低 2 つ、最大 3 つ** のドラフターを使用する。
@@ -381,16 +251,15 @@ Draft 1, Draft 2, ... と番号を振り、1 ファイル 1 ドラフトとし�
 
 ### doc_type の扱い
 
-* **ユーザーが明示的に指定した doc_type は必ず尊重する**。自動判定で上書きしない。
-* ユーザーが指定した doc_type がレジストリに存在しない場合、利用可能な doc_type リスト（`spec`, `proposal` など）を提示する。
-* 自動判定で曖昧な場合は、ユーザーに選択肢を提示して確認する。
+* **doc_type は必ず対話的に選択させる**。コマンド実行後、番号付きリストを提示する。
+* ユーザーが1-5以外の数値を入力した場合、または無効な入力をした場合は、再度選択を促す。
 
 ### ドキュメント作成
 
 * `template.md` に書かれている章立ては **基本的に変更しない**。
-* `docs/inputs/` および `docs/<doc_type>/output/`（`draft/` 配下を除く）に記載された事実は改変しない。足りない情報はユーザーに確認する。
+* `docs/00_inputs/` および `docs/<doc_type>/output/`（`draft/` 配下を除く）に記載された事実は改変しない。足りない情報はユーザーに確認する。
 * `evaluation.md` に明記された評価観点・合格条件を尊重し、それに沿ったループ制御を行う。
-* `docs/inputs/` 配下のすべての `.md` ファイルと `docs/<doc_type>/output/` 配下の最終版ファイル（`draft/` 配下を除く）を必ずインプットとして各ドラフターに渡す。
+* `docs/00_inputs/` 配下のすべての `.md` ファイルと `docs/<doc_type>/output/` 配下の最終版ファイル（`draft/` 配下を除く）を必ずインプットとして各ドラフターに渡す。
 
 
 ### ファイル保存

@@ -60,6 +60,7 @@ docs/
         └── <filename>_<YYYYMMDD>.md  # 最終版
 ```
 
+n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.md`
 ## エージェント間の連携ルール
 
 ### 1. ドラフターエージェント
@@ -139,9 +140,11 @@ docs/
 | `plan` | 計画書 | structured, logical, concise |
 | `requirement` | 要件定義書 | structured, logical, concise |
 | `to-be_workflow` | To-Beワークフロー | structured, narrative, logical |
+n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/document_types.md` を参照してください。
 
 ## ドラフター選択ロジック
 
+n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/drafter_agents.md` を参照してください。
 ### ユーザーの明示的希望（最優先）
 
 | キーワード | 使用ドラフター |
@@ -268,36 +271,37 @@ docs/
 
 ### 新しい doc_type を追加する場合
 
-1. **ディレクトリ構造の作成**
+1. **レジストリファイルの更新**
+   - `.claude/registry/document_types.md` のテーブルに新しい行を追加
+
+2. **ディレクトリ構造の作成**
    ```
    docs/<XX_new_doc_type>/
    ├── definitions/
-   │   ├── template.md
+   │   ├── template.md      # FILE_NAME コメントを必ず追加
    │   └── evaluation.md
    └── output/
        └── draft/
    ```
 
-2. **create_document.md の更新**
-   - レジストリに新しい doc_type を追加
-   - デフォルトドラフター組み合わせを定義
-
-3. **README.md の更新**
+3. **README.md の更新**（オプション）
    - 利用可能な doc_type テーブルに追加
 
 ### 新しいドラフタースタイルを追加する場合
 
 1. **エージェント定義の作成**
    - `.claude/agents/doc-drafter-<style>.md`
+   - frontmatter に `name`, `description`, `color` を定義
    - 入力・出力フォーマットを既存のドラフターと統一
 
-2. **create_document.md の更新**
-   - エージェント一覧に追加
-   - 選択ロジックに組み込み
+2. **レジストリファイルの更新**
+   - `.claude/registry/drafter_agents.md` のテーブルに新しい行を追加
+   - 必要に応じてキーワードマッピングテーブルにも追加
 
-3. **README.md の更新**
+3. **README.md の更新**（オプション）
    - ドラフター一覧に追加
 
+**重要**: 拡張時は必ずレジストリファイルを更新してください。これが単一真実源（Single Source of Truth）です。
 ## まとめ
 
 このプロジェクトの成功の鍵は：

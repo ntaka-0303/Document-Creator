@@ -1,9 +1,24 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)"
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Task",
+      "TodoWrite",
+      "NotebookEdit",
+      "BashOutput",
+      "KillShell",
+      "Skill",
+      "SlashCommand"
     ],
-    "deny": [],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm:*-rf:*)"
+    ],
     "ask": []
   }
 }

@@ -1,3 +1,9 @@
+<!--
+FILE_NAME: 要件定義書_YYYYMMDD.md
+DESCRIPTION: ビジネス要件・システム要件定義書テンプレート
+PURPOSE: 本テンプレートに基づきAIが要件定義書を生成する際の標準ファイル名となる
+-->
+
 # 📘 **AIWorkforce 導入 要件定義書 テンプレート（Markdown）**
 
 ---
