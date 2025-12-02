@@ -65,6 +65,7 @@ DocumentCreator/
             └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
 ```
 
+**詳細なドキュメント種別定義**: [.claude/registry/document_types.md](.claude/registry/document_types.md)
 ## エージェント構成
 
 ### コマンド
@@ -80,6 +81,8 @@ DocumentCreator/
 ### 評価器
 - **doc-evaluator**: 生成されたドラフトを評価基準に基づいて評価
 
+**詳細なドラフター定義**: [.claude/registry/drafter_agents.md](.claude/registry/drafter_agents.md)
+
 ## 使い方
 
 ### 基本的な使用方法
@@ -93,24 +96,27 @@ DocumentCreator/
 
 2. **ドキュメント生成の実行**
 
-   以下の2つの方法で実行できます：
+   `/create_document` コマンドを実行し、その後対話的にドキュメント種別を選択します。
 
-   - **ドキュメント種別を明示的に指定する場合**（推奨）
-     必ず `/create_document` コマンドを使用してください。
-     ```
-     /create_document spec 機能仕様書を作成してください
-     ```
-     ※ 先頭にドキュメント種別（`spec`, `proposal` 等）を指定すると、自動判定を行わずにその種別で確定します。
+   ```
+   /create_document 機能仕様書を作成してください
+   ```
 
-   - **ドキュメント種別を自動判定させる場合**
-     チャットで直接指示を出すか、コマンドの種別指定を省略します。
-     ```
-     機能仕様書を作成してください
-     ```
-     ```
-     /create_document 新規サービスの提案資料を作りたいです
-     ```
-     → システムが文脈から最適なドキュメント種別を自動判定します。
+   コマンド実行後、以下のような選択肢が表示されます：
+
+   ```
+   作成するドキュメント種別を選択してください：
+
+   1. 提案書
+   2. 計画書
+   3. 要件定義書
+   4. To-Beワークフロー / 業務フロー
+   5. 機能仕様書 / システム仕様書
+
+   番号を入力してください（1-5）:
+   ```
+
+   番号（1-5）を入力してドキュメント種別を選択すると、処理が開始されます。
 
 3. **スタイルの指定**（オプション）
 
@@ -122,13 +128,15 @@ DocumentCreator/
 
 ### 利用可能なドキュメントタイプ
 
-| doc_type | 説明 | コマンド指定例 |
-|----------|------|--------|
-| `proposal` | 提案書 | `/create_document proposal ...` |
-| `plan` | 計画書 | `/create_document plan ...` |
-| `requirement` | 要件定義書 | `/create_document requirement ...` |
-| `to-be_workflow` | To-Beワークフロー | `/create_document to-be_workflow ...` |
-| `spec` | 機能仕様書 | `/create_document spec ...` |
+| 番号 | doc_type | 説明 |
+|-----|----------|------|
+| 1 | `proposal` | 提案書 |
+| 2 | `plan` | 計画書 |
+| 3 | `requirement` | 要件定義書 |
+| 4 | `to-be_workflow` | To-Beワークフロー |
+| 5 | `spec` | 機能仕様書 |
+
+※ 上記は要約です。詳細は [.claude/registry/document_types.md](.claude/registry/document_types.md) を参照してください。
 
 ### 生成されるファイル
 
@@ -165,6 +173,8 @@ DocumentCreator/
 - `doc-drafter-impact`
 
 ## 技術スタック
+
+※ 上記は要約です。詳細は [.claude/registry/drafter_agents.md](.claude/registry/drafter_agents.md) を参照してください。
 
 - **Claude Agent SDK**: マルチエージェントシステムの実装基盤
 - **Claude Code**: エージェントの実行環境
