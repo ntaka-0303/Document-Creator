@@ -1,6 +1,8 @@
 # Input files (共通入力情報)
 # docs/00_inputs/ ディレクトリ自体は追跡するが、配下のファイル・フォルダは無視
 docs/00_inputs/*
+# .gitkeep ファイルは例外として追跡する（ディレクトリを保持するため）
+!docs/00_inputs/.gitkeep
 
 # Output files (各ドキュメントタイプの生成物)
 docs/*/output/
