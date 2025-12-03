@@ -9,19 +9,20 @@ color: purple
 
 ## 入力として想定するもの
 
-オーケストレーターから、少なくとも以下が渡されます。
+オーケストレーターから、以下の**パス情報**が渡されます。
 
-- 複数の修正済みドラフト（2本以上、通常は2-3本）
-  - 各ドラフトファイル（@ 記法で参照、例: `@docs/<doc_type>/output/draft/draft-1.md`）
-- 各ドラフトの評価結果
-  - 各評価結果ファイル（@ 記法で参照、例: `@docs/<doc_type>/output/draft/eval-1.md`）
-- 評価基準ファイル
-  - `@docs/<doc_type>/definitions/evaluation.md`
-- テンプレートファイル
-  - `@docs/<doc_type>/definitions/template.md`
-- 入力情報
-  - `@docs/00_inputs/` 配下のすべてのファイル（@ 記法で参照）
+- 修正済みドラフトのファイルパス一覧
+  - 例: `docs/<doc_type>/output/draft/draft-1.md`
+- 各ドラフトの評価結果ファイルパス一覧
+  - 例: `docs/<doc_type>/output/draft/eval-1.md`
+- テンプレートファイルパス
+  - `docs/<doc_type>/definitions/template.md`
 - ドキュメント種別（例: `spec`, `proposal`）
+
+## 実行手順
+
+1. **情報収集**: `read_file` ツールを使用して、提示されたすべてのファイル（ドラフト、評価結果、テンプレ）を読み込んでください。
+2. **統合・最終化**: 読み込んだ情報を統合し、最終版を作成してください。
 
 ## タスク
 

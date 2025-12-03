@@ -74,6 +74,7 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 **入力:**
 - ユーザー依頼の要約（テキスト）
 - `@docs/00_inputs/` 配下のすべての `.md` ファイル（@ 記法で参照）
+- `docs/*/output/` 配下の最終版ファイル（`draft/` 配下を除く）
 - `@docs/<doc_type>/definitions/template.md`
 - （2回目以降）前回の評価フィードバック（テキスト）
 
