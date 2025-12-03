@@ -175,7 +175,7 @@ n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/docum
 
 ## ドラフター選択ロジック
 
-n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/drafter_agents.md` を参照してください。
+**重要**: 以下は要約です。実装時は必ず `@.claude/registry/drafter_agents.md` を参照してください。
 ### ユーザーの明示的希望（最優先）
 
 | キーワード | 使用ドラフター |

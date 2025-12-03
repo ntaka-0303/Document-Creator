@@ -1,0 +1,5 @@
+# Input files (共通入力情報)
+docs/00_inputs/
+
+# Output files (各ドキュメントタイプの生成物)
+docs/*/output/

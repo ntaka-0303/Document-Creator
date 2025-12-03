@@ -27,9 +27,9 @@
 | 番号 | doc_type | 表示名 | 説明 | ディレクトリ | テンプレートパス | 評価基準パス | デフォルトドラフター | 出力ファイル名 |
 |------|----------|--------|------|--------------|-----------------|--------------|---------------------|----------------|
 | 1 | proposal | 提案書 | 提案書 | 01_proposal | docs/01_proposal/definitions/template.md | docs/01_proposal/definitions/evaluation.md | structured, narrative, impact | proposal_toa_securities_aiworkforce.md |
-| 2 | plan | 計画書 | PoC計画・プロジェクト計画 | 02_plan | docs/02_plan/definitions/template.md | docs/02_plan/definitions/evaluation.md | structured, logical, concise | 計画書_YYYYMMDD.md |
+| 2 | plan | 計画書 | PoC計画・プロジェクト計画 | 02_plan | docs/02_plan/definitions/template.md | docs/02_plan/definitions/evaluation.md | structured, logical, impact | 計画書_YYYYMMDD.md |
 | 3 | requirement | 要件定義書 | ビジネス要件・システム要件 | 03_requirement | docs/03_requirement/definitions/template.md | docs/03_requirement/definitions/evaluation.md | structured, logical, concise | 要件定義書_YYYYMMDD.md |
-| 4 | to-be_workflow | To-Beワークフロー | 改善後の業務プロセス定義 | 04_to-be_workflow | docs/04_to-be_workflow/definitions/template.md | docs/04_to-be_workflow/definitions/evaluation.md | structured, narrative, logical | To-Beワークフロー_YYYYMMDD.md |
+| 4 | to-be_workflow | To-Beワークフロー | 改善後の業務プロセス定義 | 04_to-be_workflow | docs/04_to-be_workflow/definitions/template.md | docs/04_to-be_workflow/definitions/evaluation.md | structured, logical | To-Beワークフロー_YYYYMMDD.md |
 | 5 | spec | 機能仕様書 | 機能仕様書・システム仕様書 | 05_spec | docs/05_spec/definitions/template.md | docs/05_spec/definitions/evaluation.md | structured, logical, concise | 機能仕様書_YYYYMMDD.md |
 
 ## 共通インプット情報

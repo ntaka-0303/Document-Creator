@@ -1,4 +1,4 @@
-# DocumentCreator
+m# DocumentCreator
 
 Claude Agent SDKを活用した、AIによるドキュメント自動生成システムです。複数のスタイルでドラフトを生成し、評価・改善を繰り返すことで、高品質なドキュメントを作成します。
 
@@ -167,21 +167,7 @@ DocumentCreator/
 
 **注意**: すべてのドラフトが不合格の場合、Step3を繰り返します（最大2〜3回）。
 
-## デフォルトのドラフター組み合わせ
-
-### 仕様書（spec）
-- `doc-drafter-structured`
-- `doc-drafter-logical`
-- `doc-drafter-concise`（オプション）
-
-### 提案書（proposal）
-- `doc-drafter-structured`
-- `doc-drafter-narrative`
-- `doc-drafter-impact`
-
 ## 技術スタック
-
-※ 上記は要約です。詳細は [.claude/registry/drafter_agents.md](.claude/registry/drafter_agents.md) を参照してください。
 
 - **Claude Agent SDK**: マルチエージェントシステムの実装基盤
 - **Claude Code**: エージェントの実行環境
