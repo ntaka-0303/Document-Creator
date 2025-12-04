@@ -105,7 +105,7 @@ DocumentCreator/
    `/create_document` コマンドを実行し、その後対話的にドキュメント種別を選択します。
 
    ```
-   /create_document 機能仕様書を作成してください
+   /create_document
    ```
 
    コマンド実行後、以下のような選択肢が表示されます：
