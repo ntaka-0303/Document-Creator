@@ -48,13 +48,7 @@ DocumentCreator は、AIによる高品質なドキュメント自動生成シ�
 ```
 docs/
 ├── 00_inputs/              # 全ドキュメント共通の入力情報
-│   ├── work/              # サブディレクトリの例1
-│   │   └── *.md
-│   ├── Info/              # サブディレクトリの例2
-│   │   └── *.md
-│   ├── Interview Notes/   # サブディレクトリの例3
-│   │   └── *.md
-│   └── *.md               # ルート直下のファイル
+│   └── *.md               # 要件、背景、制約など
 │
 ├── 01_proposal/           # 提案書
 ├── 02_plan/               # 計画書
@@ -72,8 +66,6 @@ docs/
         └── <filename>_<YYYYMMDD>.md  # 最終版
 ```
 
-**重要**: `docs/00_inputs/`は階層構造になっており、サブディレクトリ配下のすべての`.md`ファイルも入力情報として扱います。
-
 n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.md`
 ## エージェント間の連携ルール
 
@@ -81,7 +73,7 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 
 **入力:**
 - ユーザー依頼の要約（テキスト）
-- `@docs/00_inputs/` 配下のすべての `.md` ファイル（@ 記法で参照、**サブディレクトリも含む**）
+- `@docs/00_inputs/` 配下のすべての `.md` ファイル（@ 記法で参照）
 - `docs/*/output/` 配下の最終版ファイル（`draft/` 配下を除く）
 - `@docs/<doc_type>/definitions/template.md`
 - （2回目以降）前回の評価フィードバック（テキスト）
@@ -140,6 +132,7 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 - 各ドラフトの評価結果ファイル（すべて、@ 記法で参照）
 - `@docs/<doc_type>/definitions/evaluation.md`
 - `@docs/<doc_type>/definitions/template.md`
+- `@docs/00_inputs/` 配下のすべてのファイル（@ 記法で参照）
 - doc_type（テキスト）
 
 **出力:**
