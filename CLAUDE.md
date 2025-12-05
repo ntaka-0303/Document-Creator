@@ -35,13 +35,12 @@ DocumentCreator は、AIによる高品質なドキュメント自動生成シ�
 
 1. **引数解析** → doc_type と依頼内容を決定
 2. **ドラフター選択** → doc_type とモードに応じて 1〜3 個のドラフターを選択
-3. **Step1: 並列ドラフト生成** → 各ドラフターを呼び出し（独立実行）
-4. **ファイル保存** → Write ツールで `docs/<doc_type>/output/draft/` に保存
-5. **Step2: 評価とフィードバック抽出** → doc-evaluator で各ドラフトを評価
-6. **Step3: フィードバック付き再ドラフト生成** → 各ドラフターがフィードバックをもとにドラフトを修正
-7. **再評価** → 修正されたドラフトを再度評価
-8. **Step4: 最終化** → 1つ以上のドラフトが pass の場合、doc-finalizer が複数のドラフトを統合
-9. **最終版保存** → Write ツールで `docs/<doc_type>/output/` に保存
+3. **Step1: 並列ドラフト生成** → 各ドラフターを呼び出し（独立実行）し、生成されたドラフト本文をメモリ上の配列として保持
+4. **Step2: 評価とフィードバック抽出** → doc-evaluator で各ドラフト本文を評価し、その評価結果テキストをメモリ上で保持
+5. **Step3: フィードバック付き再ドラフト生成** → 各ドラフターがフィードバックをもとにドラフトを修正（修正版もメモリ上で上書き）
+6. **再評価** → 修正されたドラフトを再度評価し、評価結果テキストをメモリ上で更新
+7. **Step4: 最終化** → 1つ以上のドラフトが pass の場合、doc-finalizer が複数のドラフト本文と評価結果テキストを統合
+8. **最終版保存** → 最終版のみを Write ツールで `docs/<doc_type>/output/` に保存
 
 #### モード別の典型的な流れ
 
@@ -104,7 +103,7 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 ### 2. 評価エージェント (doc-evaluator)
 
 **入力:**
-- 各ドラフトファイル（@ 記法で参照）
+- 各ドラフトの本文（テキスト）
 - `@docs/<doc_type>/definitions/evaluation.md`
 - doc_type（テキスト）
 
@@ -142,8 +141,8 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 ### 3. 最終化エージェント (doc-finalizer)
 
 **入力:**
-- 複数の修正済みドラフトファイル（すべて、@ 記法で参照）
-- 各ドラフトの評価結果ファイル（すべて、@ 記法で参照）
+- 複数の修正済みドラフト本文（すべてテキスト。必要に応じて ID やスタイル情報を付与）
+- 各ドラフトの評価結果テキスト（すべて `doc-evaluator` 出力の Markdown テキスト）
 - `@docs/<doc_type>/definitions/evaluation.md`
 - `@docs/<doc_type>/definitions/template.md`
 - `@docs/00_inputs/` 配下のすべてのファイル（@ 記法で参照）
@@ -166,16 +165,16 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 
 ## ファイル命名規則
 
-### ドラフトファイル
-- パス: `docs/<doc_type>/output/draft/draft-<n>.md`
-- 例: `docs/05_spec/output/draft/draft-1.md`
-- 連番は 1 から開始
-
 ### 最終版ファイル
 - パス: `docs/<doc_type>/output/<template_filename>_<YYYYMMDD>.md`
 - 例: `docs/05_spec/output/機能仕様書_20251201.md`
 - `<template_filename>` は `template.md` で定義
 - `<YYYYMMDD>` は保存日（8桁の数字）
+
+### （オプション）ドラフト・評価結果ファイル
+- 標準フローでは、中間ドラフトや評価結果をファイルとして保存しませんが、デバッグ用途などで保存したい場合は次のパスを利用できます。
+- ドラフトファイル: `docs/<doc_type>/output/draft/draft-<n>.md`（例: `docs/05_spec/output/draft/draft-1.md`）
+- 評価結果ファイル: `docs/<doc_type>/output/draft/eval-<n>.md` など
 
 ## 利用可能な doc_type
 
@@ -229,8 +228,8 @@ n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/docum
    - Write ツールで明示的に保存
 
 2. **保存パスの厳守**
-   - ドラフト: `docs/<doc_type>/output/draft/draft-<n>.md`
    - 最終版: `docs/<doc_type>/output/<template_filename>_<YYYYMMDD>.md`
+   - （任意）ドラフトや評価結果を中間保存する場合は、`docs/<doc_type>/output/draft/` 配下を使用
 
 3. **ファイル参照は @ 記法を使用**
    - 例: `@docs/00_inputs/requirements.md`
@@ -268,26 +267,22 @@ n**重要**: 以下は要約です。実装時は必ず `@.claude/registry/docum
 
 ### 評価が正しく動作しない場合
 
-1. **ドラフトファイルの確認**
-   - `docs/<doc_type>/output/draft/` にファイルが保存されているか
-   - ファイルの内容が適切か
-
-2. **評価基準の確認**
+1. **評価基準の確認**
    - `docs/<doc_type>/definitions/evaluation.md` が存在するか
    - 合格条件が明確に定義されているか
 
-3. **出力フォーマットの確認**
+2. **出力フォーマットの確認**
    - 評価結果が規定のフォーマットに従っているか
 
 ### 保存が失敗する場合
 
 1. **ディレクトリの確認**
-   - `docs/<doc_type>/output/draft/` ディレクトリが存在するか
+   - `docs/<doc_type>/output/` ディレクトリが存在するか
    - 存在しない場合は作成が必要
 
 2. **パスの確認**
    - 相対パスではなく、プロジェクトルートからの正しいパスを使用
-   - 例: `docs/05_spec/output/draft/draft-1.md`
+   - 例: `docs/05_spec/output/機能仕様書_20251201.md`
 
 3. **Write ツールの使用確認**
    - Write ツールを正しく呼び出しているか

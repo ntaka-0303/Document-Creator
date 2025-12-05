@@ -30,40 +30,40 @@ DocumentCreator/
     │   ├── definitions/
     │   │   ├── template.md        # 提案書のテンプレート
     │   │   └── evaluation.md      # 提案書の評価基準
-    │   └── output/                # 生成されたドラフト・最終版
-    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │   └── output/                # 生成された最終版（必要に応じてドラフトを保存する場合もここを使用）
+    │       ├── draft/             # （任意）ドラフトファイル格納ディレクトリ
     │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 02_plan/                   # 計画書関連
     │   ├── definitions/
     │   │   ├── template.md        # 計画書のテンプレート
     │   │   └── evaluation.md      # 計画書の評価基準
-    │   └── output/                # 生成されたドラフト・最終版
-    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │   └── output/                # 生成された最終版（必要に応じてドラフトを保存する場合もここを使用）
+    │       ├── draft/             # （任意）ドラフトファイル格納ディレクトリ
     │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 03_requirement/            # 要件定義書関連
     │   ├── definitions/
     │   │   ├── template.md        # 要件定義書のテンプレート
     │   │   └── evaluation.md      # 要件定義書の評価基準
-    │   └── output/                # 生成されたドラフト・最終版
-    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │   └── output/                # 生成された最終版（必要に応じてドラフトを保存する場合もここを使用）
+    │       ├── draft/             # （任意）ドラフトファイル格納ディレクトリ
     │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     ├── 04_to-be_workflow/         # To-Beワークフロー関連
     │   ├── definitions/
     │   │   ├── template.md        # To-Beワークフローのテンプレート
     │   │   └── evaluation.md      # To-Beワークフローの評価基準
-    │   └── output/                # 生成されたドラフト・最終版
-    │       ├── draft/             # ドラフトファイル格納ディレクトリ
+    │   └── output/                # 生成された最終版（必要に応じてドラフトを保存する場合もここを使用）
+    │       ├── draft/             # （任意）ドラフトファイル格納ディレクトリ
     │       └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
     │
     └── 05_spec/                   # 仕様書関連
         ├── definitions/
         │   ├── template.md        # 仕様書のテンプレート
         │   └── evaluation.md      # 仕様書の評価基準
-        └── output/                # 生成されたドラフト・最終版
-            ├── draft/             # ドラフトファイル格納ディレクトリ
+        └── output/                # 生成された最終版（必要に応じてドラフトを保存する場合もここを使用）
+            ├── draft/             # （任意）ドラフトファイル格納ディレクトリ
             └── <filename>_<YYYYMMDD>.md  # 最終版ファイル
 ```
 
@@ -178,10 +178,11 @@ all. すべてのドキュメント種別 (上記すべての output ディレ�
 
 ### 生成されるファイル
 
-ドキュメント生成後、以下のファイルが `docs/<doc_type>/output/` に保存されます：
+ドキュメント生成後、`docs/<doc_type>/output/` には **最終版ファイルのみ** が自動保存されます：
 
-- `draft/draft-1.md`, `draft/draft-2.md`, ... : 各スタイルで生成されたドラフト（draftサブディレクトリ内）
 - `<テンプレート名>_<YYYYMMDD>.md` : 最終的に採用されたドキュメント（例: 機能仕様書_20251127.md）
+
+※ デバッグなどの目的で中間ドラフトや評価結果をファイルとして残したい場合は、`docs/<doc_type>/output/draft/` 以下に `draft-*.md` や `eval-*.md` を手動で保存しても構いません（標準フローでは自動保存されません）。
 
 ## ワークフロー
 

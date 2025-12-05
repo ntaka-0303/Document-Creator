@@ -9,20 +9,23 @@ color: purple
 
 ## 入力として想定するもの
 
-オーケストレーターから、以下の**パス情報**が渡されます。
+オーケストレーターから、以下の情報が渡されます。
 
-- 修正済みドラフトのファイルパス一覧
-  - 例: `docs/<doc_type>/output/draft/draft-1.md`
-- 各ドラフトの評価結果ファイルパス一覧
-  - 例: `docs/<doc_type>/output/draft/eval-1.md`
+- 修正済みドラフト本文の一覧
+  - 例: `[{ id: 1, style: \"structured\", content: \"...\" }, { id: 2, style: \"logical\", content: \"...\" }, ...]`
+- 各ドラフトの評価結果テキスト一覧
+  - 例: `[{ draft_id: 1, style: \"structured\", content: \"# Evaluation Result ...\" }, ...]`
 - テンプレートファイルパス
   - `docs/<doc_type>/definitions/template.md`
 - ドキュメント種別（例: `spec`, `proposal`）
 
 ## 実行手順
 
-1. **情報収集**: `read_file` ツールを使用して、提示されたすべてのファイル（ドラフト、評価結果、テンプレ）を読み込んでください。
-2. **統合・最終化**: 読み込んだ情報を統合し、最終版を作成してください。
+1. **情報収集**:
+   - ドラフト本文と評価結果テキストは、すでに入力として与えられている配列の内容をそのまま使用してください（ドラフト／評価結果用に `read_file` を呼び出す必要はありません）。
+   - テンプレートファイルについては、`read_file` ツールを使用して `docs/<doc_type>/definitions/template.md` を読み込んでください。
+   - 必要に応じて、`docs/00_inputs/` や `docs/<doc_type>/definitions/evaluation.md` などの参照ファイルも `read_file` で読み込んで構いません。
+2. **統合・最終化**: 読み込んだ情報と入力配列を統合し、最終版を作成してください。
 
 ## タスク
 
