@@ -17,16 +17,18 @@ DocumentCreatorは、以下の機能を提供します：
 ```
 DocumentCreator/
 ├── .claude/
-│   ├── agents/                    # Claude Agentの定義
-│   │   ├── doc-drafter-*.md       # 各種ドラフターエージェント
-│   │   ├── doc-evaluator.md       # 評価エージェント
-│   │   └── doc-finalizer.md       # 最終化エージェント
+│   ├── agents/                       # Claude Agentの定義
+│   │   ├── doc-drafter-*.md          # 各種ドラフターエージェント
+│   │   ├── doc-evaluator.md          # 評価エージェント
+│   │   └── doc-finalizer.md          # 最終化エージェント
 │   └── commands/
-│       └── create_document.md     # ドキュメント作成コマンド（オーケストレーション機能含む）
+│       ├── create_document.md        # ドキュメント作成コマンド（オーケストレーション機能含む）
+│       └── summarize_inputs.md       # docs/00_inputs/ を要約して summary.md を生成するコマンド
 │
 └── docs/
-    ├── 00_inputs/                 # 入力情報（要件、背景など）
-    ├── 01_proposal/               # 提案書関連
+    ├── 00_inputs/                    # 入力情報（要件、背景など）
+    │   └── summary.md               # 00_inputs 配下の要約（自動生成・ドラフターは主にこれを参照）
+    ├── 01_proposal/                  # 提案書関連
     │   ├── definitions/
     │   │   ├── template.md        # 提案書のテンプレート
     │   │   └── evaluation.md      # 提案書の評価基準
@@ -72,6 +74,7 @@ DocumentCreator/
 
 ### コマンド
 - **/create_document**: ドキュメント生成プロセス全体を管理（オーケストレーション機能を含む）
+- **/summarize_inputs**: `docs/00_inputs/` 配下の Markdown を走査・要約し、`docs/00_inputs/summary.md` を生成
 - **/clear_outputs**: 自動作成されたファイルをクリアするコマンド（`docs/<doc_type>/output` ディレクトリ内のファイルを削除）
 
 ### ドラフター（5種類のスタイル）
@@ -94,11 +97,11 @@ DocumentCreator/
 ### 基本的な使用方法
 
 1. **入力情報の準備**
-   - `docs/00_inputs/` ディレクトリに、要件や背景情報を記載したMarkdownファイルを配置
-      - エージェントは以下をインプットとして使用します：
-     - `docs/00_inputs/` 配下のすべての `.md` ファイル
-     - `docs/*/output/` 配下の最終版ファイル（`draft/` 配下を除く）
-   - 過去に生成されたドキュメントがある場合、それらも参考情報として活用されます
+   - `docs/00_inputs/` ディレクトリに、要件や背景情報を記載した Markdown ファイルを配置します。
+   - `/create_document` 実行時には、まず `docs/00_inputs/summary.md` の存在が確認され、存在しない場合は `/summarize_inputs` に相当する処理が自動実行されます。
+     - すべてのドラフターは、**原則としてこの `summary.md` のみ** をインプットとして使用します。
+     - 元の `docs/00_inputs/**/*.md` は、要約生成・評価・最終化などが必要に応じて参照します（ドラフターからは直接参照しません）。
+   - 過去に生成されたドキュメント（`docs/*/output/` 配下の最終版ファイル、`draft/` 配下を除く）がある場合、それらも参考情報として活用されます。
 
 2. **ドキュメント生成の実行**
 
@@ -191,6 +194,7 @@ all. すべてのドキュメント種別 (上記すべての output ディレ�
 1. **依頼受付**: ユーザーからの依頼内容を把握
 2. **doc_type決定**: 対話的にドキュメント種別を選択
 3. **インプット収集**: `docs/00_inputs/` と `docs/*/output/`（`draft/` 除く）からインプット情報を収集
+   - 標準フローでは、まず `docs/00_inputs/**/*.md` から `summary.md` が生成され、ドラフターはこの要約のみを参照します。
 4. **ドラフター選択**: ドキュメントタイプと要件・モードに応じて適切なドラフターを選択（1〜3個）
 5. **Step1: ドラフト生成**: 各ドラフターが独立してドラフトを生成
 6. **Step2: 評価とフィードバック抽出**: 評価エージェントが各ドラフトをスコアリングし、改善提案を抽出

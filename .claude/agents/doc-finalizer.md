@@ -11,21 +11,32 @@ color: purple
 
 オーケストレーターから、以下の情報が渡されます。
 
-- 修正済みドラフト本文の一覧
-  - 例: `[{ id: 1, style: \"structured\", content: \"...\" }, { id: 2, style: \"logical\", content: \"...\" }, ...]`
-- 各ドラフトの評価結果テキスト一覧
-  - 例: `[{ draft_id: 1, style: \"structured\", content: \"# Evaluation Result ...\" }, ...]`
-- テンプレートファイルパス
-  - `docs/<doc_type>/definitions/template.md`
-- ドキュメント種別（例: `spec`, `proposal`）
+- **修正済みドラフト一覧**（配列）
+  - 例: `drafts: [{ id, style, content }, ...]`
+- **各ドラフトの評価結果一覧**（配列）
+  - 例: `evaluations: [{ draft_id, style, content }, ...]`
+- **共通コンテキスト**:
+  - doc_type（例: `spec`, `proposal`）
+  - ドキュメントの目的・想定読者・前提条件の要約
+  - 重要な制約事項の要約
+- **参照用ファイルパス・任意の内容**:
+  - テンプレートファイルパス: `docs/<doc_type>/definitions/template.md`
+  - 評価基準ファイルパス: `docs/<doc_type>/definitions/evaluation.md`
+  - 入力サマリファイルパス（任意）: `docs/00_inputs/summary.md`
+  - `template_content` や `evaluation_criteria_content` などの中身が渡される場合は、それを優先的に使用してもよい（なければパスから `read_file` する）
 
 ## 実行手順
 
 1. **情報収集**:
-   - ドラフト本文と評価結果テキストは、すでに入力として与えられている配列の内容をそのまま使用してください（ドラフト／評価結果用に `read_file` を呼び出す必要はありません）。
-   - テンプレートファイルについては、`read_file` ツールを使用して `docs/<doc_type>/definitions/template.md` を読み込んでください。
-   - 必要に応じて、`docs/00_inputs/` や `docs/<doc_type>/definitions/evaluation.md` などの参照ファイルも `read_file` で読み込んで構いません。
-2. **統合・最終化**: 読み込んだ情報と入力配列を統合し、最終版を作成してください。
+   - ドラフト本文と評価結果テキストは、`drafts` / `evaluations` 配列の内容をそのまま使用してください。
+   - **テンプレート**:
+     - `template_content` が提供されている場合は、それを使用してください（**`read_file` は不要**です）。
+     - 提供されていない場合のみ、テンプレートファイルパスから `read_file` で読み込みます。
+   - **評価基準・入力要約など**:
+     - 参照が必要な場合のみ、評価基準ファイルや入力サマリファイルを `read_file` で読み込みます。
+     - 一度読み込んだ内容は内部で保持し、同じファイルへの `read_file` を繰り返し行わないようにしてください。
+
+2. **統合・最終化**: 読み込んだ情報と `drafts` / `evaluations` 配列を統合し、最終版を作成してください。
 
 ## タスク
 
@@ -65,7 +76,7 @@ color: purple
    - 例: Draft 1 の「背景」セクション + Draft 2 の「目的」セクション
 
 3. **評価基準の観点を考慮**
-   - 各観点（正確性、網羅性、具体性、セキュリティ等）で優れている部分を優先的に採用
+   - 各観点（正確性、網羅性、具体性、セキュリティ等）で優れている部分を優先的に 採用
    - 評価結果の「strengths」に記載されている内容を重視
 
 ### 一貫性の確保

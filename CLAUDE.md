@@ -61,7 +61,8 @@ DocumentCreator は、AIによる高品質なドキュメント自動生成シ�
 ```
 docs/
 ├── 00_inputs/              # 全ドキュメント共通の入力情報
-│   └── *.md               # 要件、背景、制約など
+│   ├── *.md               # 要件、背景、制約など（元ファイル）
+│   └── summary.md         # 00_inputs の要約（summarize_inputs コマンドで自動生成）
 │
 ├── 01_proposal/           # 提案書
 ├── 02_plan/               # 計画書
@@ -86,7 +87,7 @@ n**ドキュメント種別の正式定義**: `@.claude/registry/document_types.
 
 **入力:**
 - ユーザー依頼の要約（テキスト）
-- `@docs/00_inputs/` 配下のすべての `.md` ファイル（@ 記法で参照）
+- `@docs/00_inputs/summary.md`（summarize_inputs により生成された入力要約。**ドラフターは原則これのみを参照**）
 - `docs/*/output/` 配下の最終版ファイル（`draft/` 配下を除く）
 - `@docs/<doc_type>/definitions/template.md`
 - （2回目以降）前回の評価フィードバック（テキスト）
