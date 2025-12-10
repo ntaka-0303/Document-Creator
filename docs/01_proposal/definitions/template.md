@@ -1,5 +1,5 @@
 <!--
-FILE_NAME: proposal_aiworkforce.md
+FILE_NAME: 提案書.md
 DESCRIPTION:  AIWorkforce導入提案書テンプレート
 PURPOSE: 本テンプレートに基づきAIが提案書を生成する際の標準ファイル名となる
 -->
