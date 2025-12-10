@@ -55,14 +55,14 @@ description: "ドキュメント作成コマンド（トークン最適化版）
 ### 標準モード（デフォルト）
 
 1. **入力要約確認**: `docs/00_inputs/summary.md` がなければ `@summarize_inputs` を実行
-2. **ドラフト生成**: `doc-drafter-structured` を呼び出し
+2. **ドラフト生成**: `doc-drafter` を `style: structured` で呼び出し
 3. **自己レビュー**: ドラフターが出力時に自己チェック（評価エージェント不使用）
 4. **保存**: 最終版を `docs/<doc_type>/output/<filename>_<YYYYMMDD>.md` に保存
 
 ### 品質モード
 
 1. **入力要約確認**: 同上
-2. **ドラフト生成**: `doc-drafter-structured` を呼び出し
+2. **ドラフト生成**: `doc-drafter` を `style: structured` で呼び出し
 3. **評価**: `doc-evaluator` でドラフトを評価
 4. **改善**: フィードバックを基に同ドラフターで再生成（1回のみ）
 5. **保存**: 同上
@@ -70,7 +70,7 @@ description: "ドキュメント作成コマンド（トークン最適化版）
 ### 高品質モード
 
 1. **入力要約確認**: 同上
-2. **ドラフト生成**: 2つのドラフターを並列実行（`structured` + doc_type別）
+2. **ドラフト生成**: `doc-drafter` を2回呼び出し（`style: structured` + doc_type別スタイル）
 3. **評価**: `doc-evaluator` で両ドラフトをバッチ評価
 4. **統合**: `doc-finalizer` で複数ドラフトを統合
 5. **保存**: 同上
@@ -101,9 +101,10 @@ description: "ドキュメント作成コマンド（トークン最適化版）
 
 ## エージェント呼び出し仕様
 
-### ドラフターへの入力
+### ドラフター（doc-drafter）への入力
 
 ```
+style: <structured | narrative | impact | concise | logical>
 doc_type: <doc_type>
 目的: <1-2文の要約>
 想定読者: <1文>
