@@ -59,6 +59,37 @@ color: green
 
 ## 出力
 
-- Markdown形式のドキュメント本文のみ
+**形式**: JSON + Markdown
+
+```json
+{
+  "status": "success",
+  "metadata": {
+    "draft_id": <割り当てられたID>,
+    "style": "<style名>",
+    "doc_type": "<doc_type>",
+    "word_count": <単語数>,
+    "sections": [
+      { "title": "1. 見出し", "words": <単語数> },
+      { "title": "2. 見出し", "words": <単語数> }
+    ],
+    "created_at": "<ISO8601形式のタイムスタンプ>",
+    "hash": "<本文内容のチェックサム（SHA256の最初12文字）>"
+  },
+  "content": "<以下にMarkdown本文>"
+}
+
+# 1. 見出し
+
+[本文...]
+
+# 2. 見出し
+
+[本文...]
+```
+
+**重要:**
+- `metadata` はメイン会話で保持される
+- `content` はメモリマップで管理（ドラフト本文全体）
 - テンプレートの見出し構造を維持
 - ファイル保存は行わない（呼び出し元が実行）

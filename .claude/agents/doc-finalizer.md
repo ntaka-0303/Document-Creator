@@ -9,18 +9,20 @@ color: purple
 
 ## 入力
 
-- **drafts**: `[{ id, style, content }, ...]`
-- **evaluations**: `[{ draft_id, content }, ...]`
+- **drafts**: `[{ draft_id, style, content }, ...]`
+- **evaluations_meta**: `[{ draft_id, overall_score, criteria_scores, improvements }, ...]` （メタ化版）
 - **doc_type**: ドキュメント種別
+- **入力サマリパス**: `docs/00_inputs/summary_compressed.md` （圧縮版・統合判定用）
 - **テンプレートパス**: `docs/<doc_type>/definitions/template.md`
 
 ## 実行手順
 
-1. 各ドラフトの評価結果を分析
-2. 各章・セクションで最良の内容を選択
-3. 複数ドラフトの良い部分を統合
-4. 用語・表記を統一
-5. テンプレート準拠の最終版を作成
+1. 入力サマリ（圧縮版）を読み込み → ビジネス要件・スコープを確認
+2. 評価メタデータを分析 → 各ドラフトのスコア・改善ポイントを把握
+3. 各章・セクションで最良の内容を選択
+4. 複数ドラフトの良い部分を統合
+5. 用語・表記を統一
+6. テンプレート準拠の最終版を作成
 
 ## 統合方針
 
