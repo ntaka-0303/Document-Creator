@@ -13,7 +13,8 @@
       "BashOutput",
       "KillShell",
       "Skill",
-      "SlashCommand"
+      "SlashCommand",
+      "WebSearch"
     ],
     "deny": [
       "Bash(rm -rf:*)",

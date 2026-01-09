@@ -6,7 +6,9 @@
 
 ## コマンド実行時の振る舞い
 
-### `/create_document` コマンド実行時
+### `/create_document` スキル実行時
+
+スキル `/create_document` として実行されます。
 
 1. **説明や挨拶は不要** - 即座にワークフローを開始
 2. **最初のアクションはドキュメント種別の選択**:
@@ -61,6 +63,6 @@ docs/
 
 ## 詳細仕様の参照先
 
-- コマンド詳細: `@.claude/commands/create_document.md`
-- エージェント定義: `@.claude/agents/`
-- ドキュメント種別: `@.claude/registry/document_types.md`
+- スキル定義: `.claude/skills/`
+- エージェント定義: `.claude/agents/`
+- ドキュメント種別: `.claude/registry/document_types.md`
